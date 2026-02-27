@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Cake Session Time Finder</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.quiz-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(27, 58, 47, 0.08);
+}
+
+.quiz-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1B3A2F;
+  text-align: center;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.quiz-subtitle {
+  font-size: 16px;
+  color: #5a6c64;
+  text-align: center;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.question-container {
+  transition: opacity 0.3s ease;
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1B3A2F;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 500px) {
+  .options-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.option-button {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1B3A2F;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.option-button:hover {
+  border-color: #1B3A2F;
+  background: #f8fdf9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 58, 47, 0.12);
+}
+
+.option-button:active {
+  transform: translateY(0);
+}
+
+.result-container {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.result-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1B3A2F;
+  margin-bottom: 12px;
+}
+
+.result-description {
+  font-size: 16px;
+  color: #5a6c64;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.result-time {
+  display: inline-block;
+  background: #1B3A2F;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.restart-button {
+  background: transparent;
+  border: 2px solid #1B3A2F;
+  border-radius: 12px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1B3A2F;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.restart-button:hover {
+  background: #1B3A2F;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 class="quiz-title">Find Your Perfect Wedding Cake Session Time</h2>
+  <p class="quiz-subtitle">Based on the strain's two-phase effects timeline</p>
+  
+  <div id="questionContainer" class="question-container">
+    <p class="question-text">What are you hoping to experience?</p>
+    <div class="options-grid">
+      <button class="option-button" onclick="showResult('creative')">
+        🎨 Creative Energy<br>& Clarity
+      </button>
+      <button class="option-button" onclick="showResult('social')">
+        💬 Social Vibes<br>& Good Times
+      </button>
+      <button class="option-button" onclick="showResult('relax')">
+        🌙 Deep Relaxation<br>& Comfort
+      </button>
+      <button class="option-button" onclick="showResult('rest')">
+        😴 Wind Down<br>to Rest
+      </button>
+    </div>
+  </div>
+
+  <div id="resultContainer" class="result-container">
+    <div class="result-icon" id="resultIcon"></div>
+    <h3 class="result-title" id="resultTitle"></h3>
+    <p class="result-description" id="resultDescription"></p>
+    <div class="result-time" id="resultTime"></div>
+    <button class="restart-button" onclick="resetQuiz()">Try Another Mood</button>
+  </div>
+</div>
+
+<script>
+const results = {
+  creative: {
+    icon: '✨',
+    title: 'Early Evening (5-6 PM)',
+    description: 'Wedding Cake\'s cerebral lift phase (0-15 minutes) brings heightened awareness and creative flow. Start your session when you have time to explore those ideas before the relaxation phase settles in.',
+    time: 'Best Time: 5-6 PM'
+  },
+  social: {
+    icon: '🎉',
+    title: 'Happy Hour (6-7 PM)',
+    description: 'Catch the crossover phase (15-45 minutes) when euphoric energy steadies into calm contentment. Perfect for dinner with friends or casual hangouts where you want to be present but relaxed.',
+    time: 'Best Time: 6-7 PM'
+  },
+  relax: {
+    icon: '🛋️',
+    title: 'Post-Dinner (8-9 PM)',
+    description: 'The deep body phase (45-90 minutes) delivers peak physical comfort and appetite satisfaction. Ideal timing for cozy couch sessions, movies, or creative hobbies without time pressure.',
+    time: 'Best Time: 8-9 PM'
+  },
+  rest: {
+    icon: '🌙',
+    title: 'Pre-Bedtime (9-10 PM)',
+    description: 'Start 2-3 hours before bedtime so the sedative tail end (90+ minutes) aligns perfectly with your natural rest schedule. Most sessions wind down around the 3-hour mark.',
+    time: 'Best Time: 9-10 PM'
+  }
+};
+
+function showResult(mood) {
+  const result = results[mood];
+  
+  document.getElementById('resultIcon').textContent = result.icon;
+  document.getElementById('resultTitle').textContent = result.title;
+  document.getElementById('resultDescription').textContent = result.description;
+  document.getElementById('resultTime').textContent = result.time;
+  
+  document.getElementById('questionContainer').style.display = 'none';
+  document.getElementById('resultContainer').style.display = 'block';
+}
+
+function resetQuiz() {
+  document.getElementById('questionContainer').style.display = 'block';
+  document.getElementById('resultContainer').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
